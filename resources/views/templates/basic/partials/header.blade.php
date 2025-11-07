@@ -32,7 +32,7 @@
                                         <li class="mobile-none"><a href="{{ route('pages', [$data->slug]) }}">{{ __($data->name) }}</a></li>
                                     @endforeach
 
-                                    <li class="mobile-none"><a href="{{ route('contact') }}"><i class="las la-envelope"></i><span>@lang('Contact')</span></a></li>
+                                    <li class="mobile-none"><a href="{{ route('contact') }}"><i class="las la-envelope"></i><span>@lang('Support Ticket')</span></a></li>
 
                                     @auth
                                         <li><a class="pe-1" href="{{ route('user.home') }}"><i class="las la-tachometer-alt"></i><span>@lang('Dashboard')</span></a></li>

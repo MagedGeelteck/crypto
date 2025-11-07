@@ -1,0 +1,200 @@
+{
+    "header": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Header Section",
+        "content": {
+            "top_message_one": "text",
+            "top_message_two": "text",
+            "contact_icon": "icon",
+            "contact_heading": "text",
+            "contact_details": "text"
+        }
+    },
+    "banner": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Banner Section",
+        "element": {
+            "images": {
+                "image": {
+                    "size": "1920x420"
+                }
+            },
+            "upper_title": "text",
+            "heading": "text",
+            "bottom_title": "text",
+            "button_name": "text",
+            "url": "text",
+            "modal": false
+        }
+    },
+    "service": {
+        "builder": true,
+        "name": "Service Section",
+        "element": {
+            "heading": "text",
+            "sub_title": "text",
+            "icon": "icon",
+            "modal": true
+        }
+    },
+    "product": {
+        "builder": false,
+        "name": "Product Section"
+    },
+    "testimonial": {
+        "builder": true,
+        "name": "Testimonial Section",
+        "element": {
+            "images": {
+                "image": {
+                    "size": "100x100"
+                }
+            },
+            "name": "text",
+            "designation": "text",
+            "quote": "textarea",
+            "modal": false
+        }
+    },
+    "brand": {
+        "builder": true,
+        "name": "Brand Section",
+        "element": {
+            "name": "text",
+            "images": {
+                "image": {
+                    "size": "170x100"
+                }
+            },
+            "modal": true
+        }
+    },
+    "blog": {
+        "builder": true,
+        "name": "Blog Section",
+        "no_selection": true,
+        "element": {
+            "images": {
+                "image": {
+                    "size": "780x310",
+                    "thumb": "375x150"
+                }
+            },
+            "title": "text",
+            "slug": "title",
+            "description_nic": "textarea-nic",
+            "modal": false,
+            "seo": true
+        }
+    },
+    "home_page_offer": {
+        "builder": true,
+        "name": "Offer Manage",
+        "no_selection": true,
+        "element": {
+            "heading": "text",
+            "sub_title": "text",
+            "discount": "text",
+            "details": "text",
+            "url": "text",
+            "modal": true
+        }
+    },
+    "subscribe": {
+        "builder": true,
+        "name": "Subscribe Section",
+        "no_selection": true,
+        "content": {
+            "heading": "text",
+            "sub_title": "text"
+        }
+    },
+    "social_icon": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Social Icons",
+        "element": {
+            "title": "text",
+            "social_icon": "icon",
+            "url": "text",
+            "modal": true
+        }
+    },
+    "contact_us": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Contact Us",
+        "content": {
+            "heading_one": "text",
+            "heading_two": "text",
+            "map_key": "text",
+            "latitude": "text",
+            "longitude": "text"
+        },
+        "element": {
+            "heading": "text",
+            "details": "text",
+            "icon": "icon",
+            "modal": true
+        }
+    },
+    "footer": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Footer Section",
+        "content": {
+            "details": "text"
+        }
+    },
+    "policy_pages": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Policy Pages",
+        "hide_builder": true,
+        "element": {
+            "title": "text",
+            "slug": "title",
+            "details": "textarea-nic",
+            "modal": false,
+            "seo": true
+        }
+    },
+    "banned": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Banned",
+        "content": {
+            "images": {
+                "image": {
+                    "size": "360x370"
+                }
+            }
+        }
+    },
+    "login": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Login Page",
+        "content": {
+            "images": {
+                "image": {
+                    "size": "1152x945"
+                }
+            }
+        }
+    },
+    "register": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Register Page",
+        "content": {
+            "images": {
+                "image": {
+                    "size": "1152x945"
+                }
+            }
+        }
+    }
+}

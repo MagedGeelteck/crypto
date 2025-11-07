@@ -1,0 +1,1 @@
+<?php echo "Installation system - update paths manually for new structure"; ?>

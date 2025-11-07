@@ -1,0 +1,299 @@
+/* Custom CSS for Site Customization */
+
+/* Global font: Inter with robust system fallbacks */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
+                 "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html, body, input, button, select, textarea,
+h1, h2, h3, h4, h5, h6,
+.header-menu, .footer-section, .account, .form-control, .btn {
+    font-family: var(--font-sans) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Optional: slightly tighter heading tracking for Inter */
+h1, h2, h3, h4, h5, h6 { letter-spacing: 0.01em; }
+
+/* Center the main navigation menu */
+.header-top-content-area {
+    justify-content: center !important;
+}
+
+/* Center the menu items within the header */
+.header-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.header-menu ul a {
+    display: flex;
+    align-items: center;
+    padding: 0.65em 1.6em;
+    color: #fff;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: .015em;
+    transition: color .25s ease, background .25s ease;
+}
+.header-menu ul a i {
+    font-size: 18px;
+    margin-right: 6px;
+    line-height: 1;
+}
+.header-menu ul a:hover {
+    color: var(--base-color, #ffc107);
+}
+
+/* Ensure the header-top-right section also centers properly */
+.header-top-right {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.header-lang-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+.header-lang-right .custom--dropdown__selected {
+    padding: 0.5em .9em;
+    font-size: 14px;
+}
+
+/* Adjusted language dropdown (right side) */
+.header-lang-right .dropdown-list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    background: #222529;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all .25s ease;
+    margin: 0;
+    padding: .4rem 0;
+    min-width: 160px;
+    list-style: none;
+}
+.header-lang-right .custom--dropdown:hover .dropdown-list {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.header-lang-right .dropdown-list__item a {
+    display: flex;
+    align-items: center;
+    padding: .45em .9em;
+    color:#fff;
+    font-size: 13px;
+    text-decoration:none;
+    gap:6px;
+}
+.header-lang-right .dropdown-list__item a:hover {
+    background: rgba(255,255,255,.08);
+}
+.header-lang-right .dropdown-list__item .thumb img {
+    width: 20px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+/* Mobile responsiveness for centered menu */
+@media only screen and (max-width: 991px) {
+    .header-top-content-area {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .header-top-right { flex-direction: column; }
+    .header-lang-right { margin-left: 0; }
+}
+
+@media only screen and (max-width: 767px) {
+    .header-menu ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .header-menu ul a {
+        padding: 0.5em 0.75em;
+        font-size: 12px;
+    }
+    
+    .header-menu ul a { font-size:14px; padding:.55em .9em; }
+    .header-menu ul a i { font-size:16px; margin-right:4px; }
+}
+
+/* Mobile menu language switcher styling */
+.mobile-language-menu {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.mobile-language-menu .language-select-area {
+    display: flex;
+    justify-content: center;
+}
+
+.mobile-language-menu .custom--dropdown__selected {
+    color: white;
+    font-size: 14px;
+    padding: 10px 15px;
+    justify-content: center;
+}
+
+.mobile-language-menu .dropdown-list {
+    position: relative;
+    background: rgba(0, 0, 0, 0.8);
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+.mobile-language-menu .dropdown-list__item a {
+    padding: 10px 15px;
+    color: white;
+    justify-content: center;
+}
+
+/* ===== Brand Section (Full-width) ===== */
+.brand-fullwidth {
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,.04) 100%);
+}
+.brand-fullwidth .brand-item img {
+    max-height: 100%;
+    width: auto;
+    opacity: 1;
+    transition: transform .3s ease;
+    border-radius: 15px;
+}
+.brand-fullwidth .brand-item img:hover {
+    transform: translateY(-4px) scale(1.04);
+}
+
+/* ===== Modern Footer ===== */
+.modern-footer {
+    position: relative;
+    overflow: hidden;
+    background: #0e0f12;
+    color: #d2d4d9;
+}
+.modern-footer .footer-bg-layer {
+    position: absolute; inset: 0;
+    background: radial-gradient(1200px 400px at 50% -10%, rgba(0,48,135,.25), transparent 60%),
+                radial-gradient(1200px 400px at 50% 110%, rgba(255,193,7,.08), transparent 60%);
+    pointer-events: none;
+}
+.modern-footer .footer-title {
+    font-weight: 700; font-size: 16px; letter-spacing: .02em;
+    color: #fff; margin-bottom: 12px;
+}
+.modern-footer .footer-text { color: #b9bcc3; }
+.modern-footer .footer-links li { margin-bottom: 8px; }
+.modern-footer .footer-links a {
+    color: #c7cad1; text-decoration: none; transition: color .2s ease;
+}
+.modern-footer .footer-links a:hover { color: #ffc107; }
+.modern-footer .footer-contact .contact-label { color: #e2e4ea; }
+.modern-footer .footer-contact .contact-value { color: #c7cad1; }
+.modern-footer .footer-logo img { max-height: 48px; }
+.modern-footer .footer-bottom { border-top: 1px solid rgba(255,255,255,.08); }
+.modern-footer .copyright-wrap { color: #9ca3af; }
+
+/* ===== Full-Width Banner Slider ===== */
+.banner-fullwidth {
+    width: 100%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    position: relative;
+}
+.banner-fullwidth .banner-slider {
+    width: 100%;
+    max-width: 1140px; /* typical container width */
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.banner-fullwidth .swiper-slide {
+    position: relative;
+}
+.banner-fullwidth .banner-thumb {
+    width: 100%;
+    height: 420px;
+    border-radius: 18px;
+    overflow: hidden;
+}
+@media (max-width: 1199px) { .banner-fullwidth .banner-thumb { height: 380px; } }
+@media (max-width: 991px)  { .banner-fullwidth .banner-thumb { height: 340px; } }
+@media (max-width: 767px)  { .banner-fullwidth .banner-thumb { height: 300px; } }
+@media (max-width: 575px)  { .banner-fullwidth .banner-thumb { height: 260px; } }
+.banner-fullwidth .banner-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 18px; /* ensure radius if image differs */
+}
+.banner-fullwidth .banner-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: min(100%, 1100px);
+    padding: 0 1.5rem;
+}
+.banner-fullwidth .banner-content .title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+    text-shadow: 0 2px 12px rgba(0,0,0,.4);
+}
+.banner-fullwidth .banner-content .sub-title {
+    font-size: clamp(.9rem, 2.4vw, 1.25rem);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: .85;
+}
+.banner-fullwidth .banner-content h5 {
+    font-size: clamp(.75rem, 1.8vw, 1rem);
+    font-weight: 500;
+    opacity: .9;
+}
+.banner-fullwidth .banner-content .btn--base {
+    margin-top: 1.25rem;
+    padding: .85rem 1.85rem;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 6px 24px -4px rgba(0,0,0,.4);
+}
+.banner-fullwidth .swiper-pagination {
+    bottom: 18px;
+}
+.banner-fullwidth .swiper-pagination-bullet {
+    background: rgba(255,255,255,.6);
+    width: 10px; height: 10px;
+    opacity: 1;
+    transition: background .3s, transform .3s;
+}
+.banner-fullwidth .swiper-pagination-bullet-active {
+    background: #ffc107;
+    transform: scale(1.4);
+}

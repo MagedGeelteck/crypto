@@ -6,69 +6,58 @@
         $contactElement = getContent('contact_us.element');
     @endphp
 
-    <div class="contact-section">
-        <div class="container">
-            <div class="contact-area">
-                <div class="row justify-content-center mb-30-none">
-                    <div class="col-lg-4 mb-30">
-                        <div class="contact-info-item-area mb-40-none">
-                            <div class="contact-info-header mb-30">
-                                <h3 class="header-title">{{ __(@$contactContent->data_values->heading_one) }}</h3>
-                            </div>
-                            @foreach ($contactElement as $item)
-                                <div class="contact-info-item d-flex align-items-center mb-40 flex-wrap">
-                                    <div class="contact-info-icon">
-                                        @php echo @$item->data_values->icon @endphp
-                                    </div>
-                                    <div class="contact-info-content">
-                                        <h3 class="title">{{ __(@$item->data_values->heading) }}</h3>
-                                        <p>{{ __(@$item->data_values->details) }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="col-lg-8 mb-30">
-                        <div class="contact-form-area">
-                            <h3 class="title">{{ __(@$contactContent->data_values->heading_two) }}</h3>
-                            <form class="contact-form" method="post">
-                                @csrf
-                                <div class="row justify-content-center mb-10-none">
-                                    <div class="col-lg-12 form-group">
-                                        <input class="form-control" name="name" type="text" value="{{ old('name', @$user->fullname) }}" placeholder="@lang('Your name')" @if ($user && $user->profile_complete) readonly @endif required>
-                                    </div>
-                                    <div class="col-lg-12 form-group">
-                                        <input class="form-control" name="email" type="email" value="{{ old('email', @$user->email) }}" placeholder="@lang('Your Email')" @if ($user) readonly @endif required>
-                                    </div>
-                                    <div class="col-lg-12 form-group">
-                                        <input class="form-control" name="subject" type="text" value="{{ old('subject') }}" placeholder="@lang('Your subject')" required>
-                                    </div>
-                                    <div class="col-lg-12 form-group">
-                                        <textarea class="form-control" name="message" required placeholder="@lang('Your message')">{{ old('message') }}</textarea>
-                                    </div>
-
-                                    @php
-                                        $custom = true;
-                                    @endphp
-
-                                    <x-captcha :custom="$custom" />
-
-                                    <div class="col-lg-12 form-group mb-0">
-                                        <button class="submit-btn" type="submit">@lang('Send Message')</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="map-section ptb-60">
+    <div class="contact-section py-60">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="maps" id="map"></div>
+                <div class="col-lg-10">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="mb-3">@lang('Open a Support Ticket')</h3>
+                            @auth
+                                <form class="disableSubmission" action="{{ route('ticket.store') }}" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label">@lang('Username')</label>
+                                            <input class="form-control" value="{{ auth()->user()->username }}" readonly>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label">@lang('Subject')</label>
+                                            <input class="form-control" name="subject" type="text" value="{{ old('subject') }}" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">@lang('Priority')</label>
+                                            <select class="form-select" name="priority" required data-minimum-results-for-search="-1">
+                                                <option value="3">@lang('High')</option>
+                                                <option value="2">@lang('Medium')</option>
+                                                <option value="1">@lang('Low')</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label">@lang('Message')</label>
+                                            <textarea class="form-control" name="message" rows="6" required>{{ old('message') }}</textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary addAttachment mb-2">
+                                                <i class="fas fa-plus"></i> @lang('Add Attachment')
+                                            </button>
+                                            <p class="text-muted mb-2"><small>@lang('Max 5 files | Max size ' . convertToReadableSize(ini_get('upload_max_filesize')) . ' | Allowed: .jpg, .jpeg, .png, .pdf, .doc, .docx')</small></p>
+                                            <div class="row fileUploadsContainer"></div>
+                                        </div>
+                                        <div class="col-12 text-end">
+                                            <button class="btn btn--base" type="submit"><i class="las la-paper-plane"></i> @lang('Submit Ticket')</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            @else
+                                <div class="py-4 text-center">
+                                    <h5 class="mb-3">@lang('You need to log in to open a support ticket')</h5>
+                                    <a class="btn btn--base" href="{{ route('user.login') }}">@lang('Login')</a>
+                                    <a class="btn btn-outline--base ms-2" href="{{ route('user.register') }}">@lang('Register')</a>
+                                </div>
+                            @endauth
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,25 +72,31 @@
 @endsection
 
 @push('script')
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ @$contactContent->data_values->map_key }}&callback=initMap&libraries=&v=weekly" async></script>
     <script>
-        // Initialize and add the map
-        function initMap() {
-            // The location of Uluru
-            const uluru = {
-                lat: {{ @$contactContent->data_values->latitude }},
-                lng: {{ @$contactContent->data_values->longitude }}
-            };
-            // The map, centered at Uluru
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 5,
-                center: uluru,
+        (function($){
+            "use strict";
+            let fileAdded = 0;
+            $('.addAttachment').on('click', function(){
+                fileAdded++;
+                if(fileAdded === 5){
+                    $(this).attr('disabled', true);
+                }
+                $('.fileUploadsContainer').append(`
+                    <div class="col-md-6 removeFileInput">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <input type="file" name="attachments[]" class="form-control" accept=".jpeg,.jpg,.png,.pdf,.doc,.docx" required>
+                                <button type="button" class="input-group-text btn btn-danger removeFile"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `);
             });
-            // The marker, positioned at Uluru
-            const marker = new google.maps.Marker({
-                position: uluru,
-                map: map,
+            $(document).on('click','.removeFile',function(){
+                fileAdded--;
+                $('.addAttachment').removeAttr('disabled');
+                $(this).closest('.removeFileInput').remove();
             });
-        }
+        })(jQuery);
     </script>
 @endpush

@@ -18,7 +18,7 @@ class SupportTicket extends Model
     public function username(): Attribute
     {
         return new Attribute(
-            get:fn () => $this->email,
+            get:fn () => $this->attributes['username'] ?? ($this->user?->username),
         );
     }
 

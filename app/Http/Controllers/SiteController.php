@@ -60,37 +60,31 @@ class SiteController extends Controller
 
     public function contactSubmit(Request $request)
     {
+        // Deprecated in favor of support ticket form; keep as fallback if posted directly
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
             'subject' => 'required|string|max:255',
             'message' => 'required',
         ]);
 
-        $request->session()->regenerateToken();
-
-        if (!verifyCaptcha()) {
-            $notify[] = ['error', 'Invalid captcha provided'];
-            return back()->withNotify($notify);
+        if (!auth()->check()) {
+            return to_route('user.login');
         }
 
-        $random = getNumber();
+        $request->session()->regenerateToken();
 
         $ticket = new SupportTicket();
-        $ticket->user_id = auth()->id() ?? 0;
-        $ticket->name = $request->name;
-        $ticket->email = $request->email;
+        $ticket->user_id = auth()->id();
+        $ticket->name = auth()->user()->fullname;
+        $ticket->username = auth()->user()->username;
         $ticket->priority = Status::PRIORITY_MEDIUM;
-
-
-        $ticket->ticket = $random;
+        $ticket->ticket = getNumber();
         $ticket->subject = $request->subject;
         $ticket->last_reply = Carbon::now();
         $ticket->status = Status::TICKET_OPEN;
         $ticket->save();
 
         $adminNotification = new AdminNotification();
-        $adminNotification->user_id = auth()->user() ? auth()->user()->id : 0;
+        $adminNotification->user_id = auth()->id();
         $adminNotification->title = 'A new contact message has been submitted';
         $adminNotification->click_url = urlPath('admin.ticket.view', $ticket->id);
         $adminNotification->save();

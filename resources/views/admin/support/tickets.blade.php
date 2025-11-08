@@ -26,9 +26,9 @@
 
                                     <td>
                                         @if($item->user_id)
-                                        <a href="{{ route('admin.users.detail', $item->user_id)}}"> {{@$item->user->fullname}}</a>
+                                            <a href="{{ route('admin.users.detail', $item->user_id)}}" class="fw-bold">{{ @$item->user->username }}</a>
                                         @else
-                                            <p class="fw-bold"> {{$item->name}}</p>
+                                            <span class="fw-bold">{{ $item->username ?? $item->name }}</span>
                                         @endif
                                     </td>
                                     <td>

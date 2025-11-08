@@ -27,14 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
                     ->name('admin.')
                     ->group(base_path('routes/admin.php'));
 
-                    Route::middleware(['web','maintenance'])
+                    Route::middleware(['web','maintenance','onion.force'])
                     ->namespace('Gateway')
                     ->prefix('ipn')
                     ->name('ipn.')
                     ->group(base_path('routes/ipn.php'));
 
-                Route::middleware(['web','maintenance'])->prefix('user')->group(base_path('routes/user.php'));
-                Route::middleware(['web','maintenance'])->group(base_path('routes/web.php'));
+                Route::middleware(['web','maintenance','onion.force'])->prefix('user')->group(base_path('routes/user.php'));
+                Route::middleware(['web','maintenance','onion.force'])->group(base_path('routes/web.php'));
 
             });
         }
@@ -47,7 +47,8 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\LanguageMiddleware::class,
-            \App\Http\Middleware\ActiveTemplateMiddleware::class,
+              \App\Http\Middleware\ActiveTemplateMiddleware::class,
+              \App\Http\Middleware\TrustProxies::class,
         ]);
 
         $middleware->alias([

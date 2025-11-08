@@ -84,7 +84,9 @@ trait SupportTicketManager
         $ticket->$column    = $user->id;
         $ticket->ticket     = rand(100000, 999999);
         $ticket->name       = $user->fullname;
-        $ticket->email      = $user->email;
+    // Store username instead of relying on email for identification
+    $ticket->username   = $user->username;
+    $ticket->email      = $user->email; // retained for backward compatibility
         $ticket->subject    = $request->subject;
         $ticket->last_reply = Carbon::now();
         $ticket->status     = Status::TICKET_OPEN;

@@ -58,6 +58,7 @@
     @stack('script-lib')
 
     <script src="{{ asset($activeTemplateTrue . 'js/main.js') }}"></script>
+    <script src="{{ asset($activeTemplateTrue . 'js/sliders-init.js') }}"></script>
 
 
 

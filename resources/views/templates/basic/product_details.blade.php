@@ -226,137 +226,16 @@
     <script src="{{ asset($activeTemplateTrue . 'js/swiper.min.js') }}"></script>
 @endpush
 
-@push('script')
+@push('script-lib')
     <script>
-        'use strict';
-
-
-        $(".xzoom").xzoom({
-            tint: '#333',
-            Xoffset: 15
-        });
-
-        var swiper = new Swiper('.product-single-slider', {
-            slidesPerView: 4,
-            spaceBetween: 10,
-            loop: false,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            speed: 1000,
-            breakpoints: {
-                991: {
-                    slidesPerView: 4,
-                },
-                767: {
-                    slidesPerView: 4,
-                },
-                575: {
-                    slidesPerView: 3,
-                },
-            }
-        });
-
-
-
-        var swiper = new Swiper('.product-slider-two', {
-            slidesPerView: 4,
-            spaceBetween: 30,
-            loop: false,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            autoplay: {
-                speed: 1000,
-                delay: 3000,
-            },
-            speed: 1000,
-            breakpoints: {
-                991: {
-                    slidesPerView: 2,
-                },
-                767: {
-                    slidesPerView: 1,
-                },
-                575: {
-                    slidesPerView: 1,
-                },
-            }
-        });
-
-
-        (function($) {
-
-            var counter = 5;
-
-            $('#loadMoreBtn').on('click', function() {
-                $.ajax({
-                    type: "get",
-                    url: "{{ route('load.more.rating') }}",
-                    data: {
-                        count: counter,
-                        id: '{{ $product->id }}'
-                    },
-                    dataType: "json",
-                    success: function(response) {
-
-                        if (response.ratings.length < 5) {
-                            $('#loadMoreBtn').remove();
-                        }
-
-                        if (response.html) {
-                            $('.comment-list').append(response.html);
-                        }
-
-                        counter = parseInt(counter) + parseInt(5);
-                    }
-                });
-            });
-
-
-        })(jQuery);
-
-        $('.productAddtocart').on('click', function() {
-
-            var id = '{{ $product->id }}';
-            var pQty = $('[name=qty]').val();
-            var csrf = '{{ csrf_token() }}'
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('add.to.cart') }}",
-                data: {
-                    product_id: id,
-                    qty: pQty,
-                    _token: csrf
-                },
-                dataType: "json",
-
-
-                success: function(response) {
-                    if (response.success) {
-
-                        notify('success', response.success);
-                        $(document).find('.total-cart').text(response.cartCount);
-                        $(document).find('.total-price').text(response.totalPrice);
-                        $('.dropdown-cart-products').html('');
-                        $('.dropdown-cart-products').html(response.html);
-
-                        if (response.cartCount > 0) {
-
-                            var checkoutHtml = `<div class="dropdown-cart-action">
-                                                <a href="{{ route('cart') }}" class="btn--base w-100">@lang('Checkout')</a>
-                                            </div>`;
-                            $('.checkout-btn').html(checkoutHtml);
-                        }
-
-                    } else {
-                        notify('error', response.error);
-                    }
-                }
-            });
-        });
+        window.SLIDER_PRODUCT_SINGLE = true;
+        window.SLIDER_PRODUCT_RELATED = true;
+        window.PRODUCT_DETAILS_HELPERS = {
+            productId: '{{ $product->id }}',
+            csrf: '{{ csrf_token() }}',
+            addToCartUrl: "{{ route('add.to.cart') }}",
+            loadMoreUrl: "{{ route('load.more.rating') }}",
+            cartUrl: "{{ route('cart') }}"
+        };
     </script>
 @endpush

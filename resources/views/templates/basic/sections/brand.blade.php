@@ -52,49 +52,6 @@
     @php app()->offsetSet('slider_script',true) @endphp
 @endif
 
-@push('script')
-    <script>
-        (function($) {
-            "use strict";
-
-            var swiper2 = new Swiper('.brand-slider-two', {
-                slidesPerView: 6,
-                spaceBetween: 16,
-                loop: true,
-                autoplay: {
-                    speed: 1000,
-                    delay: 3000,
-                },
-                speed: 800,
-                breakpoints: {
-                    1400: { slidesPerView: 8 },
-                    1200: { slidesPerView: 7 },
-                    992:  { slidesPerView: 6 },
-                    768:  { slidesPerView: 5 },
-                    576:  { slidesPerView: 4 },
-                    0:    { slidesPerView: 3 },
-                }
-            });
-
-            var swiper1 = new Swiper('.brand-slider', {
-                slidesPerView: 6,
-                spaceBetween: 16,
-                loop: true,
-                autoplay: {
-                    speed: 1000,
-                    delay: 3000,
-                },
-                speed: 800,
-                breakpoints: {
-                    1400: { slidesPerView: 8 },
-                    1200: { slidesPerView: 7 },
-                    992:  { slidesPerView: 6 },
-                    768:  { slidesPerView: 5 },
-                    576:  { slidesPerView: 4 },
-                    0:    { slidesPerView: 3 },
-                }
-            });
-
-        })(jQuery);
-    </script>
+@push('script-lib')
+    <script>window.SLIDER_BRAND = true;</script>
 @endpush

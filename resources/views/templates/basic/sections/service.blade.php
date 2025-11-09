@@ -41,33 +41,6 @@
 @endif
 
 
-@push('script')
-    <script>
-        (function($) {
-            "use strict";
-
-            var swiper = new Swiper('.info-slider', {
-                slidesPerView: 3,
-                spaceBetween: 0,
-                loop: true,
-                autoplay: {
-                    speed: 1000,
-                    delay: 3000,
-                },
-                speed: 1000,
-                breakpoints: {
-                    991: {
-                        slidesPerView: 2,
-                    },
-                    767: {
-                        slidesPerView: 1,
-                    },
-                    575: {
-                        slidesPerView: 1,
-                    },
-                }
-            });
-
-        })(jQuery);
-    </script>
+@push('script-lib')
+    <script>window.SLIDER_INFO = true;</script>
 @endpush

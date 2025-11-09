@@ -8,83 +8,13 @@
         <div class="container">
             <div class="sidebar-overlay"></div>
             <div class="sidebar-toggle"><i class="fas fa-sliders-h"></i></div>
-            <div class="row mb-30-none">
-                <aside class="sidebar-home col-xl-3 mobile-sidebar mb-30">
-                    <div class="aside-inner">
-                        <div class="widget widget-range mb-30">
-                            <h3 class="widget-range-title">@lang('Filter By Price')</h3>
-                            <div class="widget-range-area">
-                                <div id="slider-range"></div>
-                                <div class="price-range">
-                                    <label for="amount">@lang('Price') :</label>
-                                    <input id="amount" type="text" readonly>
-                                    <input name="min_price" type="hidden" value="{{ $min }}">
-                                    <input name="max_price" type="hidden" value="{{ $max }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="side-menu-wrapper mb-30">
-                            <h3 class="side-menu-title">@lang('Categories')</h3>
-                            <ul class="side-menu mx-3 mb-2 px-2 pt-2">
-                                @forelse($categories as $item)
-                                    <li class="has-sub">
-                                        <a href="javascript:void(0)">{{ __($item->name) }}</a>
-
-                                        @if (count($item->subcategories) > 0)
-                                            <span class="side-menu-toggle"></span>
-                                            <ul>
-                                                @foreach ($item->subcategories->where('status', Status::ENABLE) as $data)
-                                                    <li><a href="{{ route('subcategory.search', $data->id) }}">{{ __($data->name) }}</a></li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    </li>
-                                @empty
-                                    <li class="text-center text-white">@lang('No product found')</li>
-                                @endforelse
-                            </ul>
-                        </div>
-                        <div class="widget widget-banners mb-30 px-4 pb-4 text-center">
-                            <div class="widget-slider">
-                                <div class="swiper-wrapper">
-                                    @foreach ($offerElements as $item)
-                                        <div class="swiper-slide">
-                                            <div class="side-banner d-flex flex-column align-items-center">
-                                                <h3 class="badge-sale bg--base d-flex flex-column align-items-center justify-content-center text-uppercase">
-                                                    <em class="pt-2">{{ __(@$item->data_values->heading) }}</em>{{ __(@$item->data_values->sub_title) }}
-                                                </h3>
-                                                <h4 class="sale-text font1 text-uppercase m-b-3">{{ __(@$item->data_values->discount) }}<sup>%</sup><sub>@lang('off')</sub>
-                                                </h4>
-                                                <p>{{ __(@$item->data_values->details) }}</p>
-                                                <a class="btn btn--base btn-md" href="{{ __(@$item->data_values->url) }}">@lang('View Sale')</a>
-                                            </div>
-                                        </div>
-                                    @endforeach
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-                <div class="col-xl-9 mb-30">
-                    <nav class="toolbox">
-                        <div class="toolbox-left">
-                            <div class="toolbox-item toolbox-sort">
-                                <label>@lang('Sort By') :</label>
-                                <div class="select-custom">
-                                    <select class="form-control" name="sortby">
-                                        <option value="0">@lang('Sort by Oldest')</option>
-                                        <option value="1" selected>@lang('Sort by Newnest')</option>
-                                        <option value="2">@lang('Sort by Price: Low to High')</option>
-                                        <option value="3">@lang('Sort by Price: High to Low')</option>
-                                        <option value="4">@lang('Sort by Rating')</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-                    <div class="main-content">
-                        <div class="row mb-30-none">
+            @push('script-lib')
+                <script>
+                    window.SLIDER_HOME_PRODUCTS = true;
+                    window.SLIDER_HOME_WIDGET = true;
+                    window.SUBSCRIBE_ENDPOINT = { url: "{{ route('subscriber.store') }}", csrf: "{{ csrf_token() }}" };
+                </script>
+            @endpush
                             @forelse($products as $item)
                                 <div class="col-xl-4 col-md-6 mb-30">
                                     @include('Template::partials.product', ['item' => $item])

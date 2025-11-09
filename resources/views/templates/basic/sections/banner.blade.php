@@ -38,38 +38,6 @@
     @php app()->offsetSet('slider_script',true) @endphp
 @endif
 
-@push('script')
-    <script>
-        (function($) {
-            "use strict";
-
-            var swiper = new Swiper('.banner-slider', {
-                slidesPerView: 1,
-                spaceBetween: 0,
-                effect: 'fade',
-                loop: true,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                autoplay: {
-                    speed: 1000,
-                    delay: 3000,
-                },
-                speed: 1000,
-                breakpoints: {
-                    991: {
-                        slidesPerView: 1,
-                    },
-                    767: {
-                        slidesPerView: 1,
-                    },
-                    575: {
-                        slidesPerView: 1,
-                    },
-                }
-            });
-
-        })(jQuery);
-    </script>
+@push('script-lib')
+    <script>window.SLIDER_BANNER = true;</script>
 @endpush

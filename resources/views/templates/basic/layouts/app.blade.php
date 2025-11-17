@@ -8,8 +8,10 @@
 
     @include('partials.seo')
 
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    @unless(env('ONION_HOST'))
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    @endunless
 
     <link href="{{ asset('assets/global/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/global/css/all.min.css') }}" rel="stylesheet">
@@ -25,11 +27,13 @@
 
     <link href="{{ asset($activeTemplateTrue . 'css/color.php') }}?color={{ gs('base_color') }}" rel="stylesheet">
 
-</head>
+    </head>
 
-@php echo loadExtension('google-analytics') @endphp
+    @unless(env('ONION_HOST'))
+        @php echo loadExtension('google-analytics') @endphp
+    @endunless
 
-<body>
+    <body>
 
     @stack('fbComment')
 
@@ -62,11 +66,13 @@
 
 
 
-    @php echo loadExtension('tawk-chat') @endphp
+    @unless(env('ONION_HOST'))
+        @php echo loadExtension('tawk-chat') @endphp
+    @endunless
 
     @include('partials.notify')
 
-    @if (gs('pn'))
+    @if (gs('pn') && !env('ONION_HOST'))
         @include('partials.push_script')
     @endif
 

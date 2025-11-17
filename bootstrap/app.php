@@ -21,20 +21,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         using:function(){
             Route::namespace('App\Http\Controllers')->middleware([VugiChugi::mdNm()])->group(function(){
-                Route::middleware(['web'])
+                Route::middleware(['web','onion.force'])
                     ->namespace('Admin')
                     ->prefix('admin')
                     ->name('admin.')
                     ->group(base_path('routes/admin.php'));
 
-                    Route::middleware(['web','maintenance'])
+                    Route::middleware(['web','maintenance','onion.force'])
                     ->namespace('Gateway')
                     ->prefix('ipn')
                     ->name('ipn.')
                     ->group(base_path('routes/ipn.php'));
 
-                Route::middleware(['web','maintenance'])->prefix('user')->group(base_path('routes/user.php'));
-                Route::middleware(['web','maintenance'])->group(base_path('routes/web.php'));
+                Route::middleware(['web','maintenance','onion.force'])->prefix('user')->group(base_path('routes/user.php'));
+                Route::middleware(['web','maintenance','onion.force'])->group(base_path('routes/web.php'));
 
             });
         }
@@ -48,6 +48,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\LanguageMiddleware::class,
             \App\Http\Middleware\ActiveTemplateMiddleware::class,
+            // Trust proxy headers (X-Forwarded-*) so request->getScheme()/getHost() are correct behind Tor/reverse proxies
+            \App\Http\Middleware\TrustProxies::class,
+            // Add security headers (CSP, Referrer-Policy, etc.)
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
         $middleware->alias([
@@ -67,6 +71,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.status' => CheckStatus::class,
             'demo' => Demo::class,
             'registration.complete' => RegistrationStep::class,
+            'onion.force' => \App\Http\Middleware\ForceOnion::class,
             'maintenance' => MaintenanceMode::class,
         ]);
 

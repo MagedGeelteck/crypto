@@ -33,7 +33,7 @@ Route::namespace('User\Auth')->name('user.')->middleware('guest')->group(functio
     });
 });
 
-Route::middleware('auth')->name('user.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\PreferPreviousRedirect::class])->name('user.')->group(function () {
 
     Route::get('user-data', 'User\UserController@userData')->name('data');
     Route::post('user-data-submit', 'User\UserController@userDataSubmit')->name('data.submit');

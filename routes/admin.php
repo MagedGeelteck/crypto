@@ -26,7 +26,7 @@ Route::namespace('Auth')->group(function () {
     });
 });
 
-Route::middleware('admin')->group(function () {
+Route::middleware(['admin', \App\Http\Middleware\PreferPreviousRedirect::class])->group(function () {
     Route::controller('AdminController')->group(function () {
         Route::get('dashboard', 'dashboard')->name('dashboard');
         Route::get('chart/deposit', 'depositReport')->name('chart.deposit');

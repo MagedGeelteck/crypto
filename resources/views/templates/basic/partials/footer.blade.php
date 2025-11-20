@@ -11,13 +11,12 @@
                     <a class="footer-logo" href="{{route('home')}}"><img src="{{ siteLogo() }}" alt="@lang('logo')"></a>
                 </div>
                 <div class="row gy-4 footer-grid">
-                    <div class="col-xl-4 col-md-6">
+                    <div class="col-xl-12 col-md-12 text-center">
                         <div class="footer-block about-block">
-                            <h3 class="footer-title">@lang('About')</h3>
-                            <p class="footer-text">{{__(@$footerContent->data_values->details)}}</p>
+                            <h2 class="footer-text">{{__(@$footerContent->data_values->details)}}</h2>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-md-6">
+                    <div class="col-xl-4 col-md-6" hidden>
                         <div class="footer-block links-block">
                             <h3 class="footer-title">@lang('Explore')</h3>
                             <ul class="footer-links list-unstyled">
@@ -27,7 +26,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-6">
+                    <div class="col-xl-3 col-md-6" hidden>
                         <div class="footer-block policy-block">
                             <h3 class="footer-title">@lang('Policies')</h3>
                             <ul class="footer-links list-unstyled">
@@ -37,8 +36,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="footer-block contact-block">
+                    <div class="col-xl-6 col-md-6" >
+                        <div class="footer-block contact-block" hidden>
                             <h3 class="footer-title">@lang('Contact')</h3>
                             <ul class="footer-contact list-unstyled">
                                 @foreach($contactElement as $item)
@@ -57,7 +56,7 @@
             <div class="footer-bottom mt-50">
                 <div class="container-xl">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 py-3 copyright-wrap">
-                        <p class="mb-0 small">© {{ now()->format('Y') }} {{ gs('site_name') }} · @lang('All rights reserved')</p>
+                        <p class="mb-0 small">© 2019 - {{ now()->format('Y') }} {{ gs('site_name') }} ·</p>
                         <p class="mb-0 small">@lang('Built for performance & accessibility')</p>
                     </div>
                 </div>

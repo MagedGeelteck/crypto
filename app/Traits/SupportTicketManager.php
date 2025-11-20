@@ -10,6 +10,9 @@ use App\Models\SupportTicket;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SupportTicketOpened;
+use App\Mail\SupportTicketMessage;
 
 trait SupportTicketManager
 {
@@ -133,6 +136,16 @@ trait SupportTicketManager
 
         $notify[] = ['success', 'Ticket opened successfully!'];
 
+        // send support notification email to configured address
+        try {
+            $notifyEmail = env('SUPPORT_NOTIFY_EMAIL', 'cryptonion69@gmail.com');
+            if ($notifyEmail) {
+                Mail::to($notifyEmail)->send(new SupportTicketOpened($ticket, $message));
+            }
+        } catch (\Exception $e) {
+            // don't block user flow on mail failure; log for later
+            \Log::error('Support ticket notification mail failed: ' . $e->getMessage());
+        }
 
         return to_route($this->redirectLink, $ticket->ticket)->withNotify($notify);
     }
@@ -312,6 +325,16 @@ trait SupportTicketManager
         }
 
         $notify[] = ['success', 'Support ticket replied successfully!'];
+
+        // notify support email about this new message
+        try {
+            $notifyEmail = env('SUPPORT_NOTIFY_EMAIL', 'cryptonion69@gmail.com');
+            if ($notifyEmail) {
+                Mail::to($notifyEmail)->send(new SupportTicketMessage($ticket, $message));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Support ticket message notification mail failed: ' . $e->getMessage());
+        }
 
         return back()->withNotify($notify);
     }

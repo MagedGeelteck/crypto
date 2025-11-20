@@ -15,13 +15,7 @@
                         <div class="col-xl-7 col-md-6 mb-30">
                             <div class="product-details-content">
                                 <h2 class="product-title product-name text-white"></h2>
-                                <div class="ratings-container d-flex align-items-center flex-wrap">
-                                    <div class="product-ratings">
-                                        <span class="ratings">
-                                        </span>
-                                    </div>
-                                    <a class="rating-link" href="javascript:void(0)">(<span class="total-response"></span>)</a>
-                                </div>
+                                {{-- ratings removed from quick view modal --}}
                                 <hr class="short-divider">
                                 <div class="price-box">
                                     <span class="product-price"></span>
@@ -65,15 +59,7 @@
                 modal.find('.product-description').text(resource.short_description);
                 modal.find('.manage-preview').attr("src", $(this).data('image'));
                 modal.find('.product-id').val(resource.id);
-                modal.find('.total-response').text(resource.total_response + " @lang('Reviews')");
-                modal.find('.ratings').html('');
-
-                for (let index = 0; index < resource.avg_rating; index++) {
-                    modal.find('.ratings').append(`<i class="las la-star"></i>`);
-                }
-                for (let index = 0; index < 5 - resource.avg_rating; index++) {
-                    modal.find('.ratings').append(`<i class="lar la-star"></i>`);
-                }
+                // ratings removed from quick view modal
 
                 modal.modal('show');
             });   

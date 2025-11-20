@@ -1,20 +1,57 @@
 /* Custom CSS for Site Customization */
 
-/* Global font: Inter with robust system fallbacks */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* Global font: Oswald
+   Note: The font files are loaded with <link> tags in the layout when ONION_HOST is not set.
+   We avoid CSS @import to prevent an extra clearnet fetch when serving via onion. */
 
 :root {
-    --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
+    --font-sans: "Oswald", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell,
                  "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-html, body, input, button, select, textarea,
-h1, h2, h3, h4, h5, h6,
-.header-menu, .footer-section, .account, .form-control, .btn {
+/* Force Oswald across the site but exclude <i> icon elements.
+   Using :not(i) avoids overriding icon elements while applying the
+   preferred font to the rest of the DOM, including pseudo-elements. */
+*:not(i), *:not(i)::before, *:not(i)::after {
     font-family: var(--font-sans) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+}
+
+/* Make sure <i> elements used for icon fonts are not forced to Oswald.
+   Then explicitly restore common icon font class families (Line Awesome)
+   so icons render correctly even after applying the universal rule above. */
+i, i * {
+    /* allow icon font rules defined elsewhere to take effect */
+    font-family: initial !important;
+}
+
+/* Re-apply Line Awesome families to their classes with higher priority
+   so the icon font faces are preserved when the custom.css is loaded. */
+.la, .las, .lar {
+    font-family: 'Line Awesome Free' !important;
+}
+.lab {
+    font-family: 'Line Awesome Brands' !important;
+}
+
+/* Re-apply Font Awesome families so FA icons (fab/fa/etc.) render correctly
+   after the global font forcing rule. Adjust names to match the project's
+   Font Awesome build if different. */
+.fa, .fas, .far, .fal, .fad {
+    font-family: 'Font Awesome 5 Free' !important;
+}
+.fab {
+    font-family: 'Font Awesome 5 Brands' !important;
+}
+
+/* Small helper class pattern the theme can use when needed. Replace <uniquifier> server-side
+   if you want unique classnames per component. Use `.oswald` for general purpose. */
+.oswald {
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
 }
 
 /* Optional: slightly tighter heading tracking for Inter */
@@ -23,6 +60,14 @@ h1, h2, h3, h4, h5, h6 { letter-spacing: 0.01em; }
 /* Center the main navigation menu */
 .header-top-content-area {
     justify-content: center !important;
+}
+
+/* Constrain main logo height so it fits header */
+.header-middle-left .logo img,
+.logo img {
+    max-height: 48px;
+    height: auto;
+    width: auto;
 }
 
 /* Center the menu items within the header */

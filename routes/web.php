@@ -25,7 +25,7 @@ Route::controller('SellController')->group(function () {
     Route::get('cart', 'cart')->name('cart');
 });
 
-Route::controller('SiteController')->group(function () {
+Route::controller('SiteController')->middleware([\App\Http\Middleware\PreferPreviousRedirect::class])->group(function () {
     Route::get('/contact', 'contact')->name('contact');
     Route::post('/contact', 'contactSubmit');
     Route::get('/change/{lang?}', 'changeLanguage')->name('lang');
@@ -50,7 +50,9 @@ Route::controller('SiteController')->group(function () {
 
     Route::get('policy/{slug}', 'policyPages')->name('policy.pages');
 
-    Route::get('placeholder-image/{size}', 'placeholderImage')->withoutMiddleware('maintenance')->name('placeholder.image');
+    Route::get('placeholder-image/{size}', 'placeholderImage')
+        ->withoutMiddleware(['maintenance', \Illuminate\Session\Middleware\StartSession::class])
+        ->name('placeholder.image');
     Route::get('maintenance-mode', 'maintenance')->withoutMiddleware('maintenance')->name('maintenance');
 
     Route::get('/{slug}', 'pages')->name('pages');

@@ -9,7 +9,7 @@
             </div>
         @endif
 
-        <button class="btn-quickview quick-view" data-toggle="modal" data-resource="{{ $item }}" data-image="{{ getImage(getFilePath('product') . '/' . @$item->images->first()?->name), getFileSize('product') }}"> @lang('Quick View') </button>
+    {{-- quick view removed per request --}}
 
     </figure>
     <div class="product-details d-flex align-items-start flex-wrap">
@@ -21,13 +21,7 @@
         <h3 class="product-title">
             <a href="{{ route('product.details', [$item->id, slug($item->name)]) }}">{{ __($item->name) }}</a>
         </h3>
-        <div class="ratings-container">
-            <div class="product-ratings">
-                <span class="ratings">
-                    @php echo displayRating($item->avg_rating) @endphp
-                </span>
-            </div>
-        </div>
+        {{-- ratings removed from frontend listing --}}
         <div class="price-box">
             @if ($item->old_price)
                 <span class="old-price">{{ showAmount($item->old_price) }}</span>

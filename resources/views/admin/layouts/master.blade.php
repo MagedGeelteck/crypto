@@ -7,7 +7,12 @@
     <title>{{ gs()->siteName($pageTitle ?? '') }}</title>
 
     <link rel="shortcut icon" type="image/png" href="{{siteFavicon()}}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @unless(env('ONION_HOST'))
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Request explicit weights for Oswald so Google serves the proper font files -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    @endunless
     <link rel="stylesheet" href="{{ asset('assets/global/css/bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="{{asset('assets/admin/css/vendor/bootstrap-toggle.min.css')}}">

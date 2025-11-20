@@ -1,5 +1,13 @@
 @php
-    $products = App\Models\Product::active()->with('subcategory')->latest()->limit(12)->get();
+    // Product Collection: only products that belong to category named 'paypal' (case-insensitive)
+    $products = App\Models\Product::active()
+        ->whereHas('subcategory.category', function($q) {
+            $q->whereRaw('LOWER(name) = ?', ['paypal']);
+        })
+        ->with('subcategory')
+        ->latest()
+        ->limit(12)
+        ->get();
     $offerElements = getContent('home_page_offer.element');
     $subscriberElements = getContent('subscribe.content', true);
 
@@ -15,7 +23,16 @@
         ->latest()
         ->get();
 
-    $featuredProducts = App\Models\Product::active()->featured()->with('subcategory')->limit(9)->latest()->get();
+    // Featured Products: only featured products that belong to category named 'custom' (case-insensitive)
+    $featuredProducts = App\Models\Product::active()
+        ->featured()
+        ->whereHas('subcategory.category', function($q) {
+            $q->whereRaw('LOWER(name) = ?', ['custom']);
+        })
+        ->with('subcategory')
+        ->limit(9)
+        ->latest()
+        ->get();
 
 @endphp
 
@@ -28,7 +45,7 @@
                         <div class="row justify-content-center">
                             <div class="col-xl-12">
                                 <div class="section-header">
-                                    <h3 class="section-title">@lang('Product Collection')</h3>
+                                    <h3 class="section-title">@lang('Paypal')</h3>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +115,7 @@
                                                         <img src="{{ getImage(getFilePath('product') . '/' . $item->images->first()?->name, getFileSize('product')) }}" alt="@lang('product')">
                                                     </a>
 
-                                                    <button class="btn-quickview quick-view" data-toggle="modal" data-resource="{{ $item }}" data-image="{{ getImage(getFilePath('product') . '/' . $item->images->first()?->name, getFileSize('product')) }}"> @lang('Quick View') </button>
+                                                    {{-- quick view removed per request --}}
 
                                                 </figure>
                                                 <div class="product-details d-flex align-items-start flex-wrap">
@@ -111,13 +128,7 @@
                                                     <h3 class="product-title">
                                                         <a href="{{ route('product.details', [$item->id, slug($item->name)]) }}">{{ __($item->name) }}</a>
                                                     </h3>
-                                                    <div class="ratings-container">
-                                                        <div class="product-ratings">
-                                                            <span class="ratings">
-                                                                @php echo displayRating($item->avg_rating) @endphp
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                                    {{-- ratings removed from frontend section --}}
                                                     <div class="price-box">
                                                         @if ($item->old_price)
                                                             <span class="old-price">{{ showAmount($item->old_price) }}</span>
@@ -152,7 +163,7 @@
                                                             <img src="{{ getImage(getFilePath('product') . '/' . $item->images->first()?->name, getFileSize('product')) }}" alt="@lang('product')">
                                                         </a>
 
-                                                        <button class="btn-quickview quick-view" data-toggle="modal" data-resource="{{ $item }}" data-image="{{ getImage(getFilePath('product') . '/' . $item->images->first()?->name, getFileSize('product')) }}"> @lang('Quick View') </button>
+                                                        {{-- quick view removed per request --}}
                                                     </figure>
                                                     <div class="product-details d-flex align-items-start flex-wrap">
                                                         <div class="category-wrap d-flex justify-content-between align-items-center w-100 flex-wrap">
@@ -163,13 +174,7 @@
                                                         <h3 class="product-title">
                                                             <a href="{{ route('product.details', [$item->id, slug($item->name)]) }}">{{ __($item->name) }}</a>
                                                         </h3>
-                                                        <div class="ratings-container">
-                                                            <div class="product-ratings">
-                                                                <span class="ratings">
-                                                                    @php echo displayRating($item->avg_rating) @endphp
-                                                                </span>
-                                                            </div>
-                                                        </div>
+                                                        {{-- ratings removed from frontend section --}}
                                                         <div class="price-box">
                                                             @if ($item->old_price)
                                                                 <span class="old-price">{{ showAmount($item->old_price) }}</span>
@@ -241,7 +246,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="widget widget-newsletters bg-gray mb-30 text-center">
+                        <div class="widget widget-newsletters bg-gray mb-30 text-center" hidden>
                             <h3 class="widget-title text-uppercase">{{ @$subscriberElements->data_values->heading }}</h3>
                             <p class="mb-2">{{ @$subscriberElements->data_values->sub_title }} </p>
                             <form class="subscribe-form">

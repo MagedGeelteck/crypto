@@ -13,7 +13,7 @@
                             <img src="{{ frontendImage('banner', @$bannerElement->data_values->image, '1920x420') }}" alt="banner">
                         </div>
                         <div class="banner-content">
-                            <h3 class="sub-title text-white">{{ __(@$bannerElement->data_values->upper_title) }}</h3>
+                            <h3 hidden class="sub-title text-white">{{ __(@$bannerElement->data_values->upper_title) }}</h3>
                         </div>
                     </div>
                 </div>

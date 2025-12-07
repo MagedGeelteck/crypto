@@ -153,8 +153,24 @@ class Email extends NotifyProcess implements Notifiable{
     */
 	public function prevConfiguration(){
 		if ($this->user) {
-			$this->email = $this->user->email;
-			$this->receiverName = $this->user->fullname;
+			// Check if user has a recent deposit with shipping email (PayPal email)
+			$shippingEmail = null;
+			if (isset($this->user->id)) {
+				// Try to get the most recent deposit with shipping email for this user
+				$deposit = \App\Models\Deposit::where('user_id', $this->user->id)
+					->whereNotNull('shipping')
+					->latest()
+					->first();
+				
+				if ($deposit && isset($deposit->shipping['email']) && !empty($deposit->shipping['email'])) {
+					$shippingEmail = $deposit->shipping['email'];
+					\Illuminate\Support\Facades\Log::info('Using shipping email for notification: ' . $shippingEmail . ' for user: ' . $this->user->id);
+				}
+			}
+			
+			// Use shipping email if available, otherwise fall back to user email
+			$this->email = $shippingEmail ?? $this->user->email;
+			$this->receiverName = $this->user->fullname ?? $this->user->username ?? 'User';
 		}
 		$this->toAddress = $this->email;
 	}

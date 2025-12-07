@@ -11,7 +11,7 @@ class Deposit extends Model
 
     protected $casts = [
         'detail' => 'object',
-        'shipping' => 'object',
+        'shipping' => 'array',
     ];
 
     protected $hidden = ['detail'];

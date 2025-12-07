@@ -158,6 +158,26 @@ class DepositController extends Controller
             $item->product->save();
         }
 
+        // Send order status update email to customer
+        if (isset($deposit->shipping['email']) && !empty($deposit->shipping['email'])) {
+            try {
+                $sellsWithProduct = Sell::where('code', $deposit->code)->with('product')->get();
+                $totalAmount = $sellsWithProduct->sum('total_price');
+                
+                \Illuminate\Support\Facades\Log::info('Sending approval email to: ' . $deposit->shipping['email']);
+                
+                \Illuminate\Support\Facades\Mail::to($deposit->shipping['email'])->send(
+                    new \App\Mail\OrderStatusUpdate($deposit, $sellsWithProduct, $totalAmount, 'Approved', '#10b981')
+                );
+                
+                \Illuminate\Support\Facades\Log::info('Approval email sent successfully');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send approval email: ' . $e->getMessage());
+            }
+        } else {
+            \Illuminate\Support\Facades\Log::warning('No PayPal email found for approved order: ' . $deposit->code);
+        }
+
         $notify[] = ['success', 'Payment request has been approved.'];
 
         return redirect()->route('admin.deposit.pending')->withNotify($notify);
@@ -192,6 +212,26 @@ class DepositController extends Controller
             $item->status = Status::REJECTED;
             $item->payment_status = Status::SELL_PAYMENT_REJECTED;
             $item->save();
+        }
+
+        // Send order status update email to customer
+        if (isset($deposit->shipping['email']) && !empty($deposit->shipping['email'])) {
+            try {
+                $sellsWithProduct = Sell::where('code', $deposit->code)->with('product')->get();
+                $totalAmount = $sellsWithProduct->sum('total_price');
+                
+                \Illuminate\Support\Facades\Log::info('Sending rejection email to: ' . $deposit->shipping['email']);
+                
+                \Illuminate\Support\Facades\Mail::to($deposit->shipping['email'])->send(
+                    new \App\Mail\OrderStatusUpdate($deposit, $sellsWithProduct, $totalAmount, 'Rejected', '#ef4444')
+                );
+                
+                \Illuminate\Support\Facades\Log::info('Rejection email sent successfully');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send rejection email: ' . $e->getMessage());
+            }
+        } else {
+            \Illuminate\Support\Facades\Log::warning('No PayPal email found for rejected order: ' . $deposit->code);
         }
 
         $notify[] = ['success', 'Payment request rejected successfully'];

@@ -39,6 +39,19 @@ class PaymentController extends Controller
 
         $user = auth()->user();
 
+        // Check daily transaction limit (max 2 transactions per day)
+        // Only count completed/pending transactions, not initiated ones
+        $today = \Carbon\Carbon::today();
+        $transactionsToday = Deposit::where('user_id', $user->id)
+            ->whereDate('created_at', $today)
+            ->whereIn('status', [Status::PAYMENT_PENDING, Status::PAYMENT_SUCCESS])
+            ->count();
+
+        if ($transactionsToday >= 2) {
+            $notify[] = ['error', 'Daily transaction limit reached. You can only make 2 transactions per day. Please try again tomorrow.'];
+            return back()->withNotify($notify);
+        }
+
         $orders = Order::where('order_number', $user->id)->get();
 
 
@@ -217,6 +230,19 @@ class PaymentController extends Controller
             return redirect()->route('home')->withNotify($notify);
         }
 
+        // Additional check for daily transaction limit
+        $user = auth()->user();
+        $today = \Carbon\Carbon::today();
+        $completedTransactionsToday = Deposit::where('user_id', $user->id)
+            ->whereDate('created_at', $today)
+            ->whereIn('status', [Status::PAYMENT_PENDING, Status::PAYMENT_SUCCESS])
+            ->count();
+
+        if ($completedTransactionsToday >= 2) {
+            $notify[] = ['error', 'Daily transaction limit reached. You can only complete 2 transactions per day.'];
+            return redirect()->route('user.home')->withNotify($notify);
+        }
+
         $code = getTrx(8);
         $track = session()->get('Track');
         $data = Deposit::with('gateway')->where('status', Status::PAYMENT_INITIATE)->where('trx', $track)->first();
@@ -227,13 +253,27 @@ class PaymentController extends Controller
 
         $formProcessor = new FormProcessor();
         $validationRule = $formProcessor->valueValidation($formData);
+        
+        // Add PayPal email validation
+        $validationRule['paypal_email'] = 'required|email';
+        
         $request->validate($validationRule);
         $userData = $formProcessor->processFormData($request, $formData);
 
+        // Update shipping information with PayPal email
+        $shipping = $data->shipping ?? ['name' => null, 'mobile' => null, 'email' => null, 'address' => null];
+        $shipping['email'] = $request->paypal_email;
+
+        \Illuminate\Support\Facades\Log::info('PayPal Email from request: ' . $request->paypal_email);
+        \Illuminate\Support\Facades\Log::info('Shipping data before save: ' . json_encode($shipping));
+
         $data->detail = $userData;
+        $data->shipping = $shipping;
         $data->code = $code;
         $data->status = Status::PAYMENT_PENDING;
         $data->save();
+
+        \Illuminate\Support\Facades\Log::info('Shipping data after save: ' . json_encode($data->shipping));
 
         $user = User::find($data->user_id);
         foreach ($orders as $item) {
@@ -268,6 +308,34 @@ class PaymentController extends Controller
             'rate' => showAmount($data->rate, currencyFormat: false),
             'trx' => $data->trx
         ]);
+
+        // Send email notification to admin about new order
+        try {
+            \Illuminate\Support\Facades\Mail::to(env('ADMIN_NOTIFY_EMAIL'))->send(new \App\Mail\OrderSubmitted($data));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send order notification email: ' . $e->getMessage());
+        }
+
+        // Send order confirmation email to customer's PayPal email
+        if (isset($data->shipping['email']) && !empty($data->shipping['email'])) {
+            try {
+                $sells = Sell::where('code', $code)->with('product')->get();
+                $totalAmount = $sells->sum('total_price');
+                $btcAmount = showAmount($data->final_amount, currencyFormat: false);
+                
+                \Illuminate\Support\Facades\Log::info('Sending order confirmation to: ' . $data->shipping['email']);
+                
+                \Illuminate\Support\Facades\Mail::to($data->shipping['email'])->send(
+                    new \App\Mail\OrderConfirmation($data, $sells, $totalAmount, $btcAmount)
+                );
+                
+                \Illuminate\Support\Facades\Log::info('Order confirmation email sent successfully');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send order confirmation email: ' . $e->getMessage());
+            }
+        } else {
+            \Illuminate\Support\Facades\Log::warning('No PayPal email found in shipping data');
+        }
 
         $notify[] = ['success', 'You have deposit request has been taken'];
         return to_route('user.purchase.log')->withNotify($notify);

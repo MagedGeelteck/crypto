@@ -140,18 +140,12 @@
 				}).then(r=>r.json()).then(response => {
 					if(response.success){
 						if (typeof notify === 'function') notify('success', response.success);
-						var tc = document.querySelector('.total-cart');
-						if (tc) tc.textContent = response.cartCount;
-						var tp = document.querySelector('.total-price');
-						if (tp) tp.textContent = response.totalPrice;
-						var container = document.querySelector('.dropdown-cart-products');
-						if(container){ container.innerHTML = response.html; }
-						if (response.cartCount > 0 && cfg.cartUrl) {
-							var checkoutWrapper = document.querySelector('.checkout-btn');
-							if (checkoutWrapper) {
-								checkoutWrapper.innerHTML = '<div class="dropdown-cart-action"><a href="'+cfg.cartUrl+'" class="btn--base w-100">Checkout</a></div>';
+						// Redirect to cart page immediately after adding product
+						setTimeout(function() {
+							if (cfg.cartUrl) {
+								window.location.href = cfg.cartUrl;
 							}
-						}
+						}, 500); // Small delay to show the success message
 					}else{
 						if (typeof notify === 'function') notify('error', response.error);
 					}

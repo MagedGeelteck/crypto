@@ -54,8 +54,8 @@ class OrderController extends Controller
     {
         $pageTitle = 'Order Details';
         $orderDetails = Sell::where('code', $code)->with(['user', 'product'])->get();
-        $shippingAddress = Deposit::where('code', $code)->pluck('shipping');
-        return view('admin.order.order_details', compact('pageTitle', 'orderDetails', 'shippingAddress'));
+        $deposit = Deposit::where('code', $code)->first();
+        return view('admin.order.order_details', compact('pageTitle', 'orderDetails', 'deposit'));
     }
 
     public function complete(Request $request)
@@ -74,6 +74,27 @@ class OrderController extends Controller
         notify($sells[0]->user, 'PRODUCT_DELIVERED', [
             'code' => $sells[0]->code
         ]);
+
+        // Send order completion email to customer
+        $deposit = Deposit::where('code', $request->code)->first();
+        if ($deposit && isset($deposit->shipping['email']) && !empty($deposit->shipping['email'])) {
+            try {
+                $sellsWithProduct = Sell::where('code', $request->code)->with('product')->get();
+                $totalAmount = $sellsWithProduct->sum('total_price');
+                
+                \Illuminate\Support\Facades\Log::info('Sending completion email to: ' . $deposit->shipping['email']);
+                
+                \Illuminate\Support\Facades\Mail::to($deposit->shipping['email'])->send(
+                    new \App\Mail\OrderStatusUpdate($deposit, $sellsWithProduct, $totalAmount, 'Completed', '#10b981')
+                );
+                
+                \Illuminate\Support\Facades\Log::info('Completion email sent successfully');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send completion email: ' . $e->getMessage());
+            }
+        } else {
+            \Illuminate\Support\Facades\Log::warning('No PayPal email found for completed order: ' . $request->code);
+        }
 
         $notify[] = ['success', 'Order has been marked as completed successfully'];
         return back()->withNotify($notify);

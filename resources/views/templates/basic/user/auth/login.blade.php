@@ -38,7 +38,7 @@
                         <div class="form-group custom-check-group">
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <div>
-                                    <input class="form-check-input" id="remember" name="remember" type="checkbox" {{ old("remember") ? "checked" : "" }}>
+                                    <input class="form-check-input" id="remember" name="remember" type="checkbox" {{ old("remember", true) ? "checked" : "" }}>
                                     <label class="form-check-label mb-0" for="remember">
                                         @lang("Remember Me")
                                     </label>

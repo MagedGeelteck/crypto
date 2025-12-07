@@ -28,6 +28,14 @@
                                     <input type="password" class="form-control" name="password" required>
                                 </div>
                                 <x-captcha />
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember', true) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="remember">
+                                            @lang('Remember Me')
+                                        </label>
+                                    </div>
+                                </div>
                                 <button type="submit" class="btn cmn-btn w-100">@lang('LOGIN')</button>
                             </form>
                         </div>

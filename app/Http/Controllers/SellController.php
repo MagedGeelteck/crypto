@@ -129,7 +129,18 @@ class SellController extends Controller
                 }
             }
 
-            return view('Template::user.checkout', compact('orders', 'pageTitle', 'totalPrice', 'gatewayCurrency', 'shipable'));
+            // Check how many transactions the user has made today
+            // Only count completed/pending transactions from database, not initiated ones
+            $transactionsToday = 0;
+            if (auth()->user()) {
+                $today = \Carbon\Carbon::today();
+                $transactionsToday = \App\Models\Deposit::where('user_id', auth()->user()->id)
+                    ->whereDate('created_at', $today)
+                    ->whereIn('status', [\App\Constants\Status::PAYMENT_PENDING, \App\Constants\Status::PAYMENT_SUCCESS])
+                    ->count();
+            }
+
+            return view('Template::user.checkout', compact('orders', 'pageTitle', 'totalPrice', 'gatewayCurrency', 'shipable', 'transactionsToday'));
         } else {
             $notify[] = ['error', 'You have no cart.'];
             return redirect()->route('home')->withNotify($notify);

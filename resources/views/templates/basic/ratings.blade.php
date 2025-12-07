@@ -1,7 +1,7 @@
 @foreach ($ratings as $item)
     <li class="comment-container d-flex flex-wrap">
         <div class="comment-avatar">
-            <img src="{{ getImage(getFilePath('userProfile').'/'.$item->user->image,getFileSize('userProfile')) }}" alt="avatar">
+            <img src="{{ getImage(getFilePath('userProfile').'/'.$item->user->image,getFileSize('userProfile'), true) }}" alt="avatar">
         </div>
         <div class="comment-box">
             <div class="ratings-container">

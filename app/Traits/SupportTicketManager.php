@@ -147,6 +147,16 @@ trait SupportTicketManager
             \Log::error('Support ticket notification mail failed: ' . $e->getMessage());
         }
 
+        // Send email notification to admin about new support ticket
+        try {
+            $adminEmail = env('ADMIN_NOTIFY_EMAIL');
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new \App\Mail\AdminSupportTicket($ticket));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Admin support ticket notification mail failed: ' . $e->getMessage());
+        }
+
         return to_route($this->redirectLink, $ticket->ticket)->withNotify($notify);
     }
 
@@ -309,6 +319,32 @@ trait SupportTicketManager
                 'reply' => $request->message,
                 'link' => route('ticket.view', $ticket->ticket),
             ], $sendVia, $createLog);
+            
+            // Send email to user's latest order shipping email (PayPal email)
+            if ($ticket->user_id != 0) {
+                try {
+                    $latestDeposit = \App\Models\Deposit::where('user_id', $ticket->user_id)
+                        ->whereNotNull('shipping')
+                        ->latest()
+                        ->first();
+                    
+                    if ($latestDeposit && isset($latestDeposit->shipping['email']) && !empty($latestDeposit->shipping['email'])) {
+                        $shippingEmail = $latestDeposit->shipping['email'];
+                        
+                        \Illuminate\Support\Facades\Log::info('Sending support ticket reply notification to shipping email: ' . $shippingEmail);
+                        
+                        \Illuminate\Support\Facades\Mail::to($shippingEmail)->send(
+                            new \App\Mail\SupportTicketReply($ticket, $message, $user)
+                        );
+                        
+                        \Illuminate\Support\Facades\Log::info('Support ticket reply notification sent successfully to: ' . $shippingEmail);
+                    } else {
+                        \Illuminate\Support\Facades\Log::info('No shipping email found for user: ' . $ticket->user_id . ' - Skipping email notification');
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed to send support ticket reply notification: ' . $e->getMessage());
+                }
+            }
         }
 
         if($this->apiRequest){

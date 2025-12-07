@@ -16,11 +16,11 @@
                 </script>
             @endpush
                             @forelse($products as $item)
-                                <div class="col-xl-4 col-md-6 mb-30">
+                                <div class="col-xl-3 col-lg-4 col-md-6 mb-30">
                                     @include('Template::partials.product', ['item' => $item])
                                 </div>
                             @empty
-                                <div class="col-xl-4 col-md-6 mb-30">
+                                <div class="col-xl-3 col-lg-4 col-md-6 mb-30">
                                     <div class="product-default">
                                         <div class="product-details d-flex align-items-start flex-wrap">
                                             <h3 class="product-title">

@@ -6,7 +6,7 @@
         <button class="" data-toggle="dropdown" data-display="static" type="button" aria-haspopup="true" aria-expanded="false">
             <div class="header-user-area d-flex align-items-center justify-content-between flex-wrap">
                 <div class="header-user-thumb">
-                    <a href="javascript:void(0)"><img src="{{ getImage(getFilePath('userProfile') . '/' . auth()->user()->image, getFileSize('userProfile')) }}" alt="user"></a>
+                    <a href="javascript:void(0)"><img src="{{ getImage(getFilePath('userProfile') . '/' . auth()->user()->image, getFileSize('userProfile'), true) }}" alt="user"></a>
                 </div>
                 <div class="header-user-content">
                     <span>{{ auth()->user()->fullname }}</span>

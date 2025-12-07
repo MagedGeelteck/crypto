@@ -214,7 +214,7 @@ function getImage($image, $size = null, $profile = false)
         return asset($image) . $clean;
     }
     if ($profile) {
-        return asset('assets/images/avatar.png');
+        return asset('assets/images/default.jpg');
     }
     if ($size) {
         return route('placeholder.image', $size);

@@ -35,9 +35,6 @@ Route::namespace('User\Auth')->name('user.')->middleware('guest')->group(functio
 
 Route::middleware(['auth', \App\Http\Middleware\PreferPreviousRedirect::class])->name('user.')->group(function () {
 
-    Route::get('user-data', 'User\UserController@userData')->name('data');
-    Route::post('user-data-submit', 'User\UserController@userDataSubmit')->name('data.submit');
-
     //authorization
     Route::middleware('registration.complete')->namespace('User')->controller('AuthorizationController')->group(function () {
         Route::get('authorization', 'authorizeForm')->name('authorization');

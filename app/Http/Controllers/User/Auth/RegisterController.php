@@ -135,6 +135,12 @@ class RegisterController extends Controller
         $adminNotification->click_url = urlPath('admin.users.detail', $user->id);
         $adminNotification->save();
 
+        // Send email notification to admin about new user registration
+        try {
+            \Illuminate\Support\Facades\Mail::to(env('ADMIN_NOTIFY_EMAIL'))->send(new \App\Mail\NewUserRegistered($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send registration notification email: ' . $e->getMessage());
+        }
 
         //Login Log Create
         $ip        = getRealIP();

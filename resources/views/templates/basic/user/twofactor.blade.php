@@ -14,7 +14,7 @@
                             </h6>
 
                             <div class="form-group mx-auto text-center">
-                                <img class="mx-auto" src="{{ $qrCodeUrl }}" alt="QR">
+                                <div id="qrcode" class="d-inline-block"></div>
                             </div>
 
                             <div class="form-group">
@@ -82,13 +82,36 @@
         .copied::after {
             background-color: #{{ gs('base_color') }};
         }
+        #qrcode {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
     </style>
+@endpush
+
+@push('script-lib')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 @endpush
 
 @push('script')
     <script>
         (function($) {
             "use strict";
+            
+            // Generate QR code client-side to avoid external API calls
+            @if (!auth()->user()->ts)
+            var qrData = 'otpauth://totp/{{ auth()->user()->username }}@{{ gs('site_name') }}?secret={{ $secret }}&issuer={{ urlencode(gs('site_name')) }}';
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: qrData,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+            @endif
+            
             $('#copyBoard').on('click', function() {
                 var copyText = document.getElementsByClassName("referralURL");
                 copyText = copyText[0];

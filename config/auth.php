@@ -132,4 +132,17 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Remember Me Token Lifetime
+    |--------------------------------------------------------------------------
+    |
+    | This value controls the lifetime (in minutes) of the "remember me" cookie.
+    | By default, Laravel's remember me cookies last for 5 years (2,628,000 minutes).
+    | You can adjust this value as needed.
+    |
+    */
+
+    'remember_token_lifetime' => env('REMEMBER_TOKEN_LIFETIME', 2628000), // 5 years in minutes
+
 ];

@@ -6,12 +6,6 @@
 @endphp
 
 <div class="page-wrapper">
-    <div class="top-notice bg--base text-white">
-        <div class="container text-center">
-            <h5 class="d-inline-block mb-0 mr-2 text-white">{{ __(@$headerContent->data_values->top_message_one) }}</h5>
-            <button class="mfp-close" type="button" title="Close (Esc)">×</button>
-        </div>
-    </div>
 
     <header class="header-section">
         <div class="header">
@@ -25,7 +19,7 @@
                                 <ul>
                                     
                                     <li class="mobile-none"><a href="{{ route('home') }}"><i class="las la-home"></i><span>@lang('Home')</span></a></li>
-                                    <li class="mobile-none"><a href="{{ route('products') }}"><i class="las la-shopping-bag"></i><span>@lang('Products')</span></a></li>
+                                    {{-- Products link removed as per request --}}
                                     {{-- Blog link removed as per request --}}
 
                                     @foreach ($pages as $k => $data)
@@ -201,7 +195,7 @@
                         </li>
                     @endif
                     <li class="active"><a href="{{ route('home') }}"><i class="las la-home"></i>@lang('Home')</a></li>
-                    <li><a href="{{ route('products') }}"><i class="las la-shopping-bag"></i>@lang('Products')</a></li>
+                    {{-- Products link removed from mobile menu --}}
                     {{-- Blog link removed from mobile menu --}}
                     @foreach ($pages as $k => $data)
                         <li><a href="{{ route('pages', [$data->slug]) }}">{{ __($data->name) }}</a></li>
@@ -270,21 +264,10 @@
                         success: function(response) {
                             if (response.success) {
                                 notify('success', response.success);
-                                $(document).find('.total-cart').text(response.cartCount);
-
-                                var totalPrice = parseFloat(response.totalPrice).toFixed(2);
-                                $(document).find('.total-price').text(totalPrice);
-                                $('.dropdown-cart-products').html('');
-                                $('.dropdown-cart-products').html(response.html);
-
-                                if (response.cartCount > 0) {
-
-                                    var checkoutHtml = `<div class="dropdown-cart-action">
-                        <a href="{{ route('cart') }}" class="btn--base w-100">@lang('Go To Cart')</a>
-                    </div>`;
-                                    $('.checkout-btn').html(checkoutHtml);
-                                }
-
+                                // Redirect to cart page immediately after adding product
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('cart') }}";
+                                }, 500); // Small delay to show the success message
                             } else {
                                 notify('error', response.error);
                             }

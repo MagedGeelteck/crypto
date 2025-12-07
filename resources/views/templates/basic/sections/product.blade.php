@@ -130,9 +130,6 @@
                                                     </h3>
                                                     {{-- ratings removed from frontend section --}}
                                                     <div class="price-box">
-                                                        @if ($item->old_price)
-                                                            <span class="old-price">{{ showAmount($item->old_price) }}</span>
-                                                        @endif
                                                         <span class="product-price">{{ showAmount($item->new_price) }}</span>
                                                     </div>
                                                 </div>
@@ -176,9 +173,6 @@
                                                         </h3>
                                                         {{-- ratings removed from frontend section --}}
                                                         <div class="price-box">
-                                                            @if ($item->old_price)
-                                                                <span class="old-price">{{ showAmount($item->old_price) }}</span>
-                                                            @endif
                                                             <span class="product-price">{{ showAmount($item->new_price) }}</span>
                                                         </div>
                                                     </div>

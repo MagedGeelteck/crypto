@@ -1,4 +1,9 @@
 <div style="font-family: sans-serif; font-size: 14px; color: #111">
+    <!-- Logo -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ asset('assets/images/logo_icon/logo.png') }}" alt="{{ gs()->site_name }}" style="max-width: 150px; height: auto;">
+    </div>
+    
     <h2>New Message on Support Ticket</h2>
     <p><strong>Ticket ID:</strong> {{ $ticket->ticket }}</p>
     <p><strong>Subject:</strong> {{ $ticket->subject }}</p>

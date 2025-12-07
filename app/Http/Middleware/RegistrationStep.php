@@ -16,19 +16,8 @@ class RegistrationStep
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = auth()->user();
-        if (!$user->profile_complete) {
-            if ($request->is('api/*')) {
-                $notify[] = 'Please complete your profile to go next';
-                return response()->json([
-                    'remark'=>'profile_incomplete',
-                    'status'=>'error',
-                    'message'=>['error'=>$notify],
-                ]);
-            }else{
-                return to_route('user.data');
-            }
-        }
+        // Profile completion step removed - users no longer need to complete additional data after registration
+        // Username is now collected during registration, so this middleware simply passes through
         return $next($request);
     }
 }

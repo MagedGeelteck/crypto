@@ -29,6 +29,33 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set remember me token lifetime (5 years in minutes)
+        \Illuminate\Support\Facades\Config::set('auth.remember_token_lifetime', config('auth.remember_token_lifetime', 2628000));
+        
+        // Add event listener for all emails being sent to improve deliverability
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Mail\Events\MessageSending::class,
+            function ($event) {
+                // Add custom headers to improve deliverability and avoid spam
+                $headers = $event->message->getHeaders();
+                
+                // Add X-Mailer header
+                if (!$headers->has('X-Mailer')) {
+                    $headers->addTextHeader('X-Mailer', 'Laravel Mailer');
+                }
+                
+                // Add X-Priority header (normal priority)
+                if (!$headers->has('X-Priority')) {
+                    $headers->addTextHeader('X-Priority', '3');
+                }
+                
+                // Add MIME-Version if not present
+                if (!$headers->has('MIME-Version')) {
+                    $headers->addTextHeader('MIME-Version', '1.0');
+                }
+            }
+        );
+
         if (!cache()->get('SystemInstalled')) {
             $envFilePath = base_path('.env');
             if (!file_exists($envFilePath)) {

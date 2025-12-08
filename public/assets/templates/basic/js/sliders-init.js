@@ -140,15 +140,16 @@
 				}).then(r=>r.json()).then(response => {
 					if(response.success){
 						if (typeof notify === 'function') notify('success', response.success);
-						// Redirect to cart page immediately after adding product
-						setTimeout(function() {
-							if (cfg.cartUrl) {
-								window.location.href = cfg.cartUrl;
-							}
-						}, 500); // Small delay to show the success message
+						// Redirect to checkout page immediately
+						if (cfg.cartUrl) {
+							window.location.href = cfg.cartUrl;
+						}
 					}else{
 						if (typeof notify === 'function') notify('error', response.error);
 					}
+				}).catch(error => {
+					console.error('Add to cart error:', error);
+					if (typeof notify === 'function') notify('error', 'Failed to add product. Please try again.');
 				});
 			});
 		}

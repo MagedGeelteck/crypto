@@ -264,13 +264,15 @@
                         success: function(response) {
                             if (response.success) {
                                 notify('success', response.success);
-                                // Redirect to cart page immediately after adding product
-                                setTimeout(function() {
-                                    window.location.href = "{{ route('cart') }}";
-                                }, 500); // Small delay to show the success message
+                                // Redirect to checkout page immediately
+                                window.location.href = "{{ route('cart') }}";
                             } else {
                                 notify('error', response.error);
                             }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Add to cart failed:', error);
+                            notify('error', 'Failed to add product to cart. Please try again.');
                         }
                     });
                 });

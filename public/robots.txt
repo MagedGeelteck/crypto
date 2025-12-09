@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: http://mtidtmncruzy4k3p5jhthhsmm3vohsxxb2vayjicntykoy4lwcl7gvqd.onion/sitemap.xml

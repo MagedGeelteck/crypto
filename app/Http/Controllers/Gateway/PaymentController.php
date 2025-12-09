@@ -37,6 +37,14 @@ class PaymentController extends Controller
             'address' => 'sometimes|required'
         ]);
 
+        // Debug: Log request data
+        \Log::info('Deposit Insert Request', [
+            'gateway' => $request->gateway,
+            'currency' => $request->currency,
+            'amount' => $request->amount,
+            'all_data' => $request->all()
+        ]);
+
         $user = auth()->user();
 
         // Check daily transaction limit (max 2 transactions per day)
@@ -60,13 +68,30 @@ class PaymentController extends Controller
             $gate = GatewayCurrency::whereHas('method', function ($gate) {
                 $gate->where('status', Status::ENABLE);
             })->where('method_code', $request->gateway)->where('currency', $request->currency)->first();
+            
             if (!$gate) {
-                $notify[] = ['error', 'Invalid gateway'];
+                // Debug: Log the issue
+                \Log::error('Gateway not found', [
+                    'gateway' => $request->gateway,
+                    'currency' => $request->currency,
+                    'amount' => $request->amount
+                ]);
+                
+                $notify[] = ['error', 'Invalid gateway. Please contact support.'];
                 return back()->withNotify($notify);
             }
 
+            // Log the comparison for debugging
+            \Log::info('Amount validation', [
+                'min_amount' => $gate->min_amount,
+                'max_amount' => $gate->max_amount,
+                'request_amount' => $request->amount,
+                'min_check' => ($gate->min_amount > $request->amount),
+                'max_check' => ($gate->max_amount < $request->amount)
+            ]);
+            
             if ($gate->min_amount > $request->amount || $gate->max_amount < $request->amount) {
-                $notify[] = ['error', 'Please follow deposit limit'];
+                $notify[] = ['error', 'Amount must be between $' . number_format($gate->min_amount, 2) . ' and $' . number_format($gate->max_amount, 2) . '. Your amount: $' . number_format($request->amount, 2)];
                 return back()->withNotify($notify);
             }
 

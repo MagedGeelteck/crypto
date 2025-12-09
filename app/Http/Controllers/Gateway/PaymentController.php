@@ -342,9 +342,12 @@ class PaymentController extends Controller
 
         // Send email notification to admin about new order
         try {
-            \Illuminate\Support\Facades\Mail::to(env('ADMIN_NOTIFY_EMAIL'))->send(new \App\Mail\OrderSubmitted($data));
+            $adminEmail = config('mail.admin_notify') ?? env('ADMIN_NOTIFY_EMAIL') ?? 'hjweb96@gmail.com';
+            if ($adminEmail && filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\OrderSubmitted($data));
+            }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to send order notification email: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Failed to send admin order notification email: ' . $e->getMessage());
         }
 
         // Send order confirmation email to customer's PayPal email

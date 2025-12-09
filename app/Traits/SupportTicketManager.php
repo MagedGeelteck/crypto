@@ -149,8 +149,8 @@ trait SupportTicketManager
 
         // Send email notification to admin about new support ticket
         try {
-            $adminEmail = env('ADMIN_NOTIFY_EMAIL');
-            if ($adminEmail) {
+            $adminEmail = config('mail.support_notify') ?? config('mail.admin_notify') ?? env('ADMIN_NOTIFY_EMAIL') ?? 'hjweb96@gmail.com';
+            if ($adminEmail && filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
                 Mail::to($adminEmail)->send(new \App\Mail\AdminSupportTicket($ticket));
             }
         } catch (\Exception $e) {

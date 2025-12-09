@@ -101,4 +101,16 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Emails
+    |--------------------------------------------------------------------------
+    |
+    | Email addresses to receive admin notifications (orders, support tickets, etc.)
+    |
+    */
+
+    'admin_notify' => env('ADMIN_NOTIFY_EMAIL', 'admin@example.com'),
+    'support_notify' => env('SUPPORT_NOTIFY_EMAIL', env('ADMIN_NOTIFY_EMAIL', 'admin@example.com')),
+
 ];

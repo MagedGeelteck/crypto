@@ -137,9 +137,12 @@ class RegisterController extends Controller
 
         // Send email notification to admin about new user registration
         try {
-            \Illuminate\Support\Facades\Mail::to(env('ADMIN_NOTIFY_EMAIL'))->send(new \App\Mail\NewUserRegistered($user));
+            $adminEmail = config('mail.admin_notify') ?? env('ADMIN_NOTIFY_EMAIL') ?? 'hjweb96@gmail.com';
+            if ($adminEmail && filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+                \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\NewUserRegistered($user));
+            }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to send registration notification email: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Failed to send admin registration notification email: ' . $e->getMessage());
         }
 
         //Login Log Create

@@ -32,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
         // Set remember me token lifetime (5 years in minutes)
         \Illuminate\Support\Facades\Config::set('auth.remember_token_lifetime', config('auth.remember_token_lifetime', 2628000));
         
-        // Force clearnet URL for emails even when accessed via .onion
-        \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
+        // Force clearnet URL ONLY for email generation (not for web assets)
+        // This allows .onion to load assets correctly while emails use clearnet URLs
         
         // Add event listener for all emails being sent to improve deliverability
         \Illuminate\Support\Facades\Event::listen(
@@ -57,12 +57,17 @@ class AppServiceProvider extends ServiceProvider
                     $headers->addTextHeader('MIME-Version', '1.0');
                 }
                 
-                // Ensure no .onion addresses in email headers
+                // Replace .onion URLs with clearnet URL in email body for better deliverability
                 $body = $event->message->getBody();
-                if ($body && is_string($body)) {
-                    // Replace .onion URLs with clearnet URL in email body
-                    $body = str_replace('mtidtmncruzy4k3p5jhthhsmm3vohsxxb2vayjicntykoy4lwcl7gvqd.onion', '144.24.223.119', $body);
-                    $event->message->setBody($body);
+                if ($body) {
+                    if (is_string($body)) {
+                        $body = str_replace('mtidtmncruzy4k3p5jhthhsmm3vohsxxb2vayjicntykoy4lwcl7gvqd.onion', '144.24.223.119', $body);
+                        $event->message->setBody($body);
+                    } elseif (method_exists($body, 'getBodyAsString')) {
+                        $bodyString = $body->getBodyAsString();
+                        $bodyString = str_replace('mtidtmncruzy4k3p5jhthhsmm3vohsxxb2vayjicntykoy4lwcl7gvqd.onion', '144.24.223.119', $bodyString);
+                        $event->message->html($bodyString);
+                    }
                 }
             }
         );

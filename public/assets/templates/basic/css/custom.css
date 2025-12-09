@@ -2148,3 +2148,26 @@ section.all-sections {
 .info-content p {
     display: none !important;
 }
+
+/* SEO Content Section - Hidden from users but visible to search engines */
+.seo-content-section {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+}
+
+/* Ensure SEO content is still crawlable */
+.seo-content-section h1,
+.seo-content-section h2,
+.seo-content-section h3,
+.seo-content-section p,
+.seo-content-section ul,
+.seo-content-section li {
+    position: static;
+    visibility: visible;
+}

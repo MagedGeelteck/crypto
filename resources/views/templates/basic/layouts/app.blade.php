@@ -8,6 +8,9 @@
 
     @include('partials.seo')
 
+    {{-- Canonical link for Tor indexing --}}
+    <link rel="alternate" type="application/onion" href="http://mtidtmncruzy4k3p5jhthhsmm3vohsxxb2vayjicntykoy4lwcl7gvqd.onion{{ request()->getRequestUri() }}">
+
     @unless(env('ONION_HOST'))
         <!-- Preconnect and load Oswald font from Google Fonts for non-onion environments -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -8,7 +8,13 @@
 
     @include('partials.seo')
 
-    {{-- Canonical link for Tor indexing --}}
+    {{-- Canonical URL for SEO --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+    
+    {{-- Sitemap link for crawlers --}}
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url('/sitemap.xml') }}">
+    
+    {{-- Alternate link for Tor indexing --}}
     <link rel="alternate" type="application/onion" href="http://mtidtmncruzy4k3p5jhthhsmm3vohsxxb2vayjicntykoy4lwcl7gvqd.onion{{ request()->getRequestUri() }}">
 
     @unless(env('ONION_HOST'))

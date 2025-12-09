@@ -274,16 +274,22 @@ class PaymentController extends Controller
         abort_if(!$data, 404);
         $gatewayCurrency = $data->gatewayCurrency();
         $gateway = $gatewayCurrency->method;
-        $formData = $gateway->form->form_data;
-
+        
         $formProcessor = new FormProcessor();
-        $validationRule = $formProcessor->valueValidation($formData);
+        $validationRule = [];
+        $userData = [];
+        
+        // Only process form data if gateway has a form
+        if ($gateway->form && $gateway->form->form_data) {
+            $formData = $gateway->form->form_data;
+            $validationRule = $formProcessor->valueValidation($formData);
+            $userData = $formProcessor->processFormData($request, $formData);
+        }
         
         // Add PayPal email validation
         $validationRule['paypal_email'] = 'required|email';
         
         $request->validate($validationRule);
-        $userData = $formProcessor->processFormData($request, $formData);
 
         // Update shipping information with PayPal email
         $shipping = $data->shipping ?? ['name' => null, 'mobile' => null, 'email' => null, 'address' => null];

@@ -124,7 +124,14 @@
                                             
                                             <input name="currency" type="hidden" value="BTC">
                                             <input name="gateway" type="hidden" value="1000">
-                                            <input name="amount" type="hidden" value="{{ $totalPrice }}">
+                                            <input name="amount" type="hidden" value="{{ $totalPrice }}" id="checkout-amount">
+                                            
+                                            {{-- Debug: Show what will be sent --}}
+                                            @if(config('app.debug'))
+                                            <div class="alert alert-info mt-3">
+                                                <small>Debug Info: Amount to send = ${{ $totalPrice }}</small>
+                                            </div>
+                                            @endif
                                             
                                             <div class="checkout-btn d-flex justify-content-end form-group mt-30">
                                                 @if(isset($transactionsToday) && $transactionsToday >= 2)

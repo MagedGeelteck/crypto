@@ -33,13 +33,19 @@ class OrderConfirmation extends Mailable
      */
     public function envelope(): Envelope
     {
+        // Get email from multiple sources with guaranteed fallback
+        $fromEmail = config('mail.from.address') ?? env('MAIL_FROM_ADDRESS') ?? 'noreply@' . (parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost');
+        $fromName = config('mail.from.name') ?? env('MAIL_FROM_NAME') ?? gs('site_name') ?? 'CryptoOnion';
+        
+        // Ensure email is never null
+        if (empty($fromEmail) || !filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
+            $fromEmail = 'noreply@cryptoonion.com';
+        }
+        
         return new Envelope(
             subject: 'Order Confirmation - #' . $this->deposit->code,
-            replyTo: [env('MAIL_FROM_ADDRESS')],
-            from: new \Illuminate\Mail\Mailables\Address(
-                env('MAIL_FROM_ADDRESS'),
-                env('MAIL_FROM_NAME', gs('site_name'))
-            ),
+            replyTo: [$fromEmail],
+            from: new \Illuminate\Mail\Mailables\Address($fromEmail, $fromName),
         );
     }
 

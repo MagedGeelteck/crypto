@@ -32,9 +32,17 @@ class SupportTicketReply extends Mailable
      */
     public function envelope(): Envelope
     {
+        // Get email from multiple sources with guaranteed fallback
+        $fromEmail = config('mail.from.address') ?? env('MAIL_FROM_ADDRESS') ?? 'noreply@' . (parse_url(config('app.url'), PHP_URL_HOST) ?? 'localhost');
+        
+        // Ensure email is never null
+        if (empty($fromEmail) || !filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
+            $fromEmail = 'noreply@cryptoonion.com';
+        }
+        
         return new Envelope(
             subject: 'New Reply to Your Support Ticket #' . $this->ticket->ticket,
-            replyTo: [env('MAIL_FROM_ADDRESS')],
+            replyTo: [$fromEmail],
         );
     }
 
